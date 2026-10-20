@@ -1,0 +1,149 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- Outils ----------
+    function signedIn() { return request.auth != null; }
+    // Administrateurs : D'jims (propriétaire) et Amélie. Ils suppriment les recettes et gèrent les membres.
+    function adminEmails() { return ['djims.andre@gmail.com', 'unsachetetdemidethe@gmail.com']; }
+    function isAdmin() {
+      return signedIn()
+        && request.auth.token.email in adminEmails()
+        && request.auth.token.email_verified == true;
+    }
+    function docPath(c, id) { return /databases/$(database)/documents/$(c)/$(id); }
+    // Une suspension est enregistrée dans /bannis, que seuls les administrateurs modifient :
+    // effacer sa propre fiche membre ne permet donc pas d'y échapper.
+    function notBlocked() { return !exists(docPath('bannis', request.auth.uid)); }
+    // Inscription sur validation : seuls les membres acceptés par D'jims ou Amélie (liste /approuves) accèdent à l'app.
+    function approved() { return isAdmin() || exists(docPath('approuves', request.auth.uid)); }
+    function member() { return signedIn() && approved(); }
+    function validRecipe() {
+      let d = request.resource.data;
+      return d.name is string && d.name.size() > 0 && d.name.size() <= 200
+        && d.ingredients is list && d.ingredients.size() <= 80
+        && d.steps is list && d.steps.size() <= 60
+        && d.ownerUid is string
+        && (!('ownerName' in d) || (d.ownerName is string && d.ownerName.size() <= 60))
+        && (!('emoji' in d) || (d.emoji is string && d.emoji.size() <= 16));
+    }
+
+    // ---------- Livre de recettes commun ----------
+    // Tout membre connecté lit (même suspendu). Chacun ajoute et modifie SES recettes.
+    // Personne d'autre que l'administrateur ne peut supprimer.
+    match /recettes/{id} {
+      allow read: if member();
+      allow create: if validRecipe() && (isAdmin()
+        || (member() && notBlocked() && request.resource.data.ownerUid == request.auth.uid));
+      allow update: if validRecipe() && (isAdmin()
+        || (member() && notBlocked()
+            && resource.data.ownerUid == request.auth.uid
+            && request.resource.data.ownerUid == request.auth.uid)
+        // RGPD : à la suppression de son compte, chacun rend ses recettes anonymes
+        || (signedIn() && resource.data.ownerUid == request.auth.uid
+            && request.resource.data.ownerUid == 'anonyme' && request.resource.data.ownerName == ''));
+      allow delete: if isAdmin();
+    }
+
+    // ---------- Vins de la communauté (anonymes) ----------
+    // Le vin publié ne contient AUCUN identifiant de son auteur.
+    // Le lien vin → auteur est rangé à part dans /vinsAuteurs, lisible seulement par l'auteur lui-même :
+    // il sert uniquement à lui permettre de mettre à jour sa fiche.
+    function validWine() {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['name','domain','appellation','region','color','vintage','grapes','notes','keep','pairings','photo','updatedAt'])
+        && d.name is string && d.domain is string && d.appellation is string
+        && (d.name.size() + d.domain.size() + d.appellation.size()) > 0
+        && d.notes is string && d.notes.size() <= 600
+        && d.pairings is list && d.pairings.size() <= 6
+        && d.photo is string && d.photo.size() < 180000;
+    }
+    function legacyOwner(id) {
+      // Anciennes fiches (avant cette version) : l'identifiant était dans le vin lui-même.
+      return exists(docPath('vins', id)) && get(docPath('vins', id)).data.get('ownerUid', '') == request.auth.uid;
+    }
+    function ownsWine(id) {
+      return exists(docPath('vinsAuteurs', id)) && get(docPath('vinsAuteurs', id)).data.uid == request.auth.uid;
+    }
+    match /vins/{id} {
+      allow read: if member();
+      allow create: if member() && notBlocked() && validWine()
+        && getAfter(docPath('vinsAuteurs', id)).data.uid == request.auth.uid;
+      allow update: if validWine() && (isAdmin()
+        || (member() && notBlocked() && ownsWine(id))
+        || (member() && resource.data.get('ownerUid', '') == request.auth.uid));
+      allow delete: if isAdmin();
+    }
+    match /vinsAuteurs/{id} {
+      allow read: if signedIn() && resource.data.uid == request.auth.uid;
+      allow create: if member() && notBlocked()
+        && request.resource.data.keys().hasOnly(['uid'])
+        && request.resource.data.uid == request.auth.uid
+        && (!exists(docPath('vins', id)) || legacyOwner(id));
+      allow delete: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
+    }
+
+    // ---------- Membres ----------
+    // Chacun crée sa fiche avec SON adresse Google (impossible d'en usurper une autre) et la met à jour
+    // sans pouvoir changer d'adresse ni se réactiver. Les administrateurs voient tout le monde.
+    match /membres/{uid} {
+      allow read: if isAdmin() || (signedIn() && request.auth.uid == uid);
+      allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.blocked == false
+        && request.resource.data.email == request.auth.token.email;
+      allow update: if (isAdmin() && request.resource.data.email == resource.data.email
+          && (request.resource.data.blocked == false || !(resource.data.email in adminEmails())))
+        || (signedIn() && request.auth.uid == uid
+          && request.resource.data.blocked == resource.data.blocked
+          && request.resource.data.email == resource.data.email
+          && request.resource.data.get('status', '') == resource.data.get('status', ''));
+      // RGPD : chacun peut effacer sa propre fiche
+      allow delete: if isAdmin() || (signedIn() && request.auth.uid == uid);
+    }
+
+    // ---------- Inscriptions validées ----------
+    // Écrites uniquement par les administrateurs (D'jims ou Amélie).
+    match /approuves/{uid} {
+      allow read: if isAdmin() || (signedIn() && request.auth.uid == uid);
+      allow create, update: if isAdmin();
+      allow delete: if isAdmin() || (signedIn() && request.auth.uid == uid);
+    }
+
+    // ---------- Suspensions ----------
+    // Écrites uniquement par les administrateurs. Un administrateur ne peut pas être suspendu.
+    match /bannis/{uid} {
+      allow read: if isAdmin() || (signedIn() && request.auth.uid == uid);
+      allow create, update: if isAdmin()
+        && exists(docPath('membres', uid))
+        && !(get(docPath('membres', uid)).data.email in adminEmails());
+      allow delete: if isAdmin();
+    }
+
+    // ---------- Foyer privé (menu, courses, frigo, cave, corbeille) ----------
+    // Réservé aux personnes connectées qui connaissent le code à 8 caractères.
+    match /foyers/{code}/articles/{id} {
+      allow read, delete: if member() && code.size() == 8;
+      allow create, update: if member() && code.size() == 8
+        && request.resource.data.keys().hasOnly(['name','qty','unit','aisle','checked','fromPlan'])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() <= 100
+        && request.resource.data.checked is bool;
+    }
+    match /foyers/{code}/corbeille/{id} {
+      allow read, write: if member() && code.size() == 8;
+    }
+    match /foyers/{code}/cave/{id} {
+      allow read, delete: if member() && code.size() == 8;
+      allow create, update: if member() && code.size() == 8
+        && request.resource.data.name is string
+        && request.resource.data.qty is number;
+    }
+    match /foyers/{code}/etat/{doc} {
+      allow read, write: if member() && code.size() == 8 && doc in ['menu', 'frigo', 'profil'];
+    }
+    // Anciennes recettes du foyer (avant le livre commun) : lecture seule.
+    match /foyers/{code}/recettes/{id} {
+      allow read: if member() && code.size() == 8;
+    }
+  }
+}

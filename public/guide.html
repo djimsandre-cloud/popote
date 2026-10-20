@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mode d'emploi · Popote & Co</title>
+<meta name="description" content="Le mode d'emploi pas à pas de Popote & Co : recettes partagées, menu de la semaine, courses, frigo, cave à vin.">
+<meta name="theme-color" content="#1B6B47">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fraunces:opsz,wght@9..144,800&family=Caveat:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#1B6B47;--green-d:#0E4A31;--gold:#C9974C;--gold-l:#F6D9A2;
+  --bg:#FBF7F0;--card:#FFFFFF;--ink:#1F1B17;--muted:#5A534B;--line:#E7DFD2;--soft:#F3ECE0;
+  --tip:#E6F2EA;--tip-ink:#14532F;--warn:#FFF1DC;--warn-ink:#7A4A06;
+  --fs:20px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#13110F;--card:#1E1B18;--ink:#F4EFE7;--muted:#C9C0B4;--line:#3A342D;--soft:#2A2621;
+    --tip:#16301F;--tip-ink:#B9E6C9;--warn:#3A2A10;--warn-ink:#FFD9A0;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#13110F;--card:#1E1B18;--ink:#F4EFE7;--muted:#C9C0B4;--line:#3A342D;--soft:#2A2621;
+  --tip:#16301F;--tip-ink:#B9E6C9;--warn:#3A2A10;--warn-ink:#FFD9A0;
+}
+*{box-sizing:border-box}
+html{font-size:var(--fs);-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Nunito,system-ui,sans-serif;line-height:1.6}
+a{color:var(--green)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) a{color:#7FD3A3}}
+:root[data-theme="dark"] a{color:#7FD3A3}
+:focus-visible{outline:4px solid var(--gold);outline-offset:3px;border-radius:8px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;z-index:10}
+.skip:focus{left:12px}
+
+/* En-tête */
+header.top{position:sticky;top:0;z-index:5;background:linear-gradient(170deg,var(--green-d),var(--green));color:#fff;
+  padding:calc(10px + env(safe-area-inset-top,0px)) 16px 12px;box-shadow:0 4px 16px rgba(0,0,0,.18)}
+.toprow{display:flex;align-items:center;gap:12px;max-width:760px;margin:0 auto}
+.toprow img{width:52px;height:52px;border-radius:50%;box-shadow:0 0 0 3px var(--gold-l);flex:none}
+.brand{font-family:Fraunces,Georgia,serif;font-weight:800;font-size:25px;line-height:1.1;white-space:nowrap}
+.brand .amp{color:#FFD39A}
+.brand small{display:block;font-family:Nunito,sans-serif;font-size:14px;font-weight:700;opacity:.9}
+.grow{flex:1}
+.tools{display:flex;gap:6px}
+.tools button,.back{border:0;border-radius:999px;min-width:48px;min-height:48px;padding:0 14px;background:rgba(255,255,255,.18);color:#fff;
+  font:800 18px Nunito,sans-serif;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+.tools button:active{transform:scale(.96)}
+
+main{max-width:760px;margin:0 auto;padding:18px 16px 40px}
+h1{font-family:Fraunces,Georgia,serif;font-size:2rem;line-height:1.15;margin:8px 0 6px}
+.lead{font-size:1.1rem;color:var(--muted);margin:0 0 18px}
+.sig{font-family:Caveat,cursive;font-size:1.6rem;color:var(--gold);margin:-4px 0 14px}
+
+/* Sommaire */
+nav.toc{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:14px;margin:0 0 26px}
+nav.toc h2{margin:2px 6px 10px;font-size:1.15rem}
+nav.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+nav.toc a{display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 14px;border-radius:16px;background:var(--soft);
+  color:var(--ink);text-decoration:none;font-weight:800}
+nav.toc a span{font-size:1.5rem;width:36px;text-align:center;flex:none}
+
+/* Sections */
+section.chap{background:var(--card);border:2px solid var(--line);border-radius:24px;padding:18px 18px 8px;margin:0 0 22px;scroll-margin-top:92px}
+section.chap>h2{display:flex;align-items:center;gap:12px;margin:0 0 6px;font-size:1.45rem;line-height:1.2}
+section.chap>h2 .ic{display:grid;place-items:center;width:52px;height:52px;border-radius:16px;background:var(--tip);font-size:1.6rem;flex:none}
+section.chap>p.what{color:var(--muted);margin:0 0 14px;font-size:1.02rem}
+h3{font-size:1.12rem;margin:20px 0 8px}
+ol.steps{counter-reset:s;list-style:none;margin:0 0 12px;padding:0}
+ol.steps>li{counter-increment:s;position:relative;padding:4px 0 12px 54px;min-height:44px}
+ol.steps>li::before{content:counter(s);position:absolute;left:0;top:2px;width:40px;height:40px;border-radius:50%;
+  background:var(--green);color:#fff;font-weight:900;display:grid;place-items:center;font-size:1.05rem}
+ul.plain{margin:0 0 12px;padding-left:1.2em}
+ul.plain li{margin:0 0 8px}
+.btnlike{display:inline;padding:1px 8px;border-radius:10px;background:var(--soft);border:1px solid var(--line);font-weight:800;-webkit-box-decoration-break:clone;box-decoration-break:clone;line-height:1.9}
+main{overflow-wrap:anywhere}
+.tip,.warn{border-radius:16px;padding:12px 14px 12px 50px;position:relative;margin:4px 0 16px;font-weight:600}
+.tip{background:var(--tip);color:var(--tip-ink)}
+.warn{background:var(--warn);color:var(--warn-ink)}
+.tip::before,.warn::before{position:absolute;left:14px;top:10px;font-size:1.3rem}
+.tip::before{content:"💡"}.warn::before{content:"⚠️"}
+.tip b,.warn b{font-weight:900}
+.totop{display:inline-block;margin:4px 0 10px;font-weight:800;font-size:.95rem}
+details{border:2px solid var(--line);border-radius:16px;margin:0 0 10px;background:var(--soft)}
+summary{cursor:pointer;padding:14px 16px;font-weight:800;min-height:52px;list-style-position:inside}
+details>div{padding:0 16px 14px}
+footer{text-align:center;color:var(--muted);font-size:.85rem;padding:10px 16px calc(24px + env(safe-area-inset-bottom,0px))}
+.bigback{display:flex;justify-content:center;margin:6px 0 26px}
+.bigback a{display:inline-flex;align-items:center;gap:10px;min-height:56px;padding:0 26px;border-radius:999px;background:var(--green);color:#fff;
+  text-decoration:none;font-weight:900;font-size:1.05rem;box-shadow:0 6px 16px rgba(27,107,71,.3)}
+@media print{header.top,.tools,.bigback,.totop,.skip{display:none}section.chap{break-inside:avoid;border-color:#ccc}}
+</style>
+</head>
+<body>
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="top">
+  <div class="toprow">
+    <img src="icons/icon-192.png" alt="">
+    <div class="brand">Popote <span class="amp">&amp;</span> Co<small>Mode d'emploi</small></div>
+    <span class="grow"></span>
+    <div class="tools" role="group" aria-label="Taille du texte">
+      <button type="button" id="smaller" aria-label="Réduire la taille du texte">A−</button>
+      <button type="button" id="bigger" aria-label="Agrandir la taille du texte">A+</button>
+    </div>
+  </div>
+</header>
+
+<main id="contenu">
+  <h1>Bienvenue dans Popote &amp; Co&nbsp;!</h1>
+  <p class="sig">Amélie &amp; D'jims</p>
+  <p class="lead">Popote &amp; Co vous aide à décider quoi manger, à faire vos courses sans rien oublier, à cuisiner avec ce qu'il y a dans le frigo et à garder la trace de vos vins. Les recettes sont partagées entre tous les membres.</p>
+  <div class="tip"><b>Lecture plus confortable&nbsp;:</b> touchez <span class="btnlike">A+</span> en haut à droite pour agrandir le texte, <span class="btnlike">A−</span> pour le réduire. Votre choix est retenu.</div>
+
+  <nav class="toc" aria-labelledby="toc-t">
+    <h2 id="toc-t">Sommaire</h2>
+    <ol>
+      <li><a href="#demarrer"><span>🚀</span>1. Démarrer : connexion et installation</a></li>
+      <li><a href="#ecran"><span>🧭</span>2. Se repérer dans l'app</a></li>
+      <li><a href="#accueil"><span>🏠</span>3. L'accueil</a></li>
+      <li><a href="#menu"><span>📅</span>4. Le menu de la semaine</a></li>
+      <li><a href="#courses"><span>🛒</span>5. La liste de courses</a></li>
+      <li><a href="#frigo"><span>🧊</span>6. Le frigo et le chef</a></li>
+      <li><a href="#recettes"><span>📖</span>7. Les recettes</a></li>
+      <li><a href="#cave"><span>🍷</span>8. La cave à vin</a></li>
+      <li><a href="#foyer"><span>👥</span>9. Partager avec son foyer</a></li>
+      <li><a href="#profil"><span>👤</span>10. Mon profil, mes données, mon compte</a></li>
+      <li><a href="#faq"><span>❓</span>11. Questions fréquentes</a></li>
+      <li><a href="#admin"><span>👑</span>12. Pour les administrateurs</a></li>
+    </ol>
+  </nav>
+
+  <!-- 1 -->
+  <section class="chap" id="demarrer" aria-labelledby="t1">
+    <h2 id="t1"><span class="ic" aria-hidden="true">🚀</span>Démarrer</h2>
+    <p class="what">Il suffit d'un compte Google. C'est gratuit et sans publicité. Popote &amp; Co est <b>réservée à ses membres</b>&nbsp;: chaque inscription est validée par Amélie ou D'jims.</p>
+    <h3>Se connecter la première fois</h3>
+    <ol class="steps">
+      <li>Ouvrez l'adresse <a href="https://popote-2026.web.app">popote-2026.web.app</a> sur votre téléphone.</li>
+      <li>Touchez le bouton blanc <span class="btnlike">Se connecter avec Google</span>.</li>
+      <li>Choisissez votre compte Google dans la liste, puis validez.</li>
+      <li>L'écran <b>⏳ Demande envoyée</b> s'affiche&nbsp;: votre demande d'accès part chez Amélie et D'jims.</li>
+      <li>Dès que l'un d'eux l'accepte, l'app s'ouvre toute seule et votre prénom apparaît en haut de l'écran. Vous pouvez fermer l'app en attendant&nbsp;: elle s'ouvrira normalement la prochaine fois.</li>
+    </ol>
+    <div class="tip">En vous connectant, vous acceptez la <a href="confidentialite.html">politique de confidentialité</a>&nbsp;: elle explique simplement quelles données l'app garde et pourquoi. Vous pouvez la relire à tout moment (lien <b>🔒 Confidentialité</b> en bas de chaque écran).</div>
+    <h3>Installer l'app sur l'écran d'accueil</h3>
+    <p>Ainsi, Popote &amp; Co s'ouvre comme une vraie application, d'un seul geste.</p>
+    <ul class="plain">
+      <li><b>Android (Chrome)&nbsp;:</b> touchez les trois points <span class="btnlike">⋮</span> en haut à droite, puis <span class="btnlike">Ajouter à l'écran d'accueil</span> (ou <span class="btnlike">Installer l'application</span>).</li>
+      <li><b>iPhone (Safari)&nbsp;:</b> touchez le bouton de partage <span class="btnlike">⬆︎</span> en bas, puis <span class="btnlike">Sur l'écran d'accueil</span>.</li>
+    </ul>
+    <div class="tip">Vous restez connecté&nbsp;: inutile de vous reconnecter à chaque ouverture.</div>
+    <a class="totop" href="#contenu">↑ Retour au sommaire</a>
+  </section>
+
+  <!-- 2 -->
+  <section class="chap" id="ecran" aria-labelledby="t2">
+    <h2 id="t2"><span class="ic" aria-hidden="true">🧭</span>Se repérer dans l'app</h2>
+    <p class="what">L'écran est toujours organisé de la même façon.</p>
+    <ul class="plain">
+      <li><b>En haut</b>, le bandeau vert avec le nom de l'app, votre prénom et le logo rond. <b>Touchez le logo</b> pour ouvrir votre profil.</li>
+      <li><b>En bas</b>, la barre de navigation avec six onglets&nbsp;: <span class="btnlike">Accueil</span> <span class="btnlike">Menu</span> <span class="btnlike">Courses</span> <span class="btnlike">Frigo</span> <span class="btnlike">Cave</span> <span class="btnlike">Recettes</span>. Touchez-en un pour changer d'écran.</li>
+      <li><b>Les fenêtres</b> (une recette, un vin…) se ferment avec le bouton <span class="btnlike">Fermer</span> ou avec le geste « retour » du téléphone.</li>
+      <li><b>Les petits messages</b> en bas de l'écran confirment vos actions. Certains proposent <span class="btnlike">Annuler</span> pendant quelques secondes&nbsp;: pratique en cas d'erreur.</li>
+    </ul>
+    <a class="totop" href="#contenu">↑ Retour au sommaire</a>
+  </section>
+
+  <!-- 3 -->
+  <section class="chap" id="accueil" aria-labelledby="t3">
+    <h2 id="t3"><span class="ic" aria-hidden="true">🏠</span>L'accueil</h2>
+    <p class="what">Tout ce qui compte aujourd'hui, en un coup d'œil.</p>
+    <ul class="plain">
+      <li><b>Ce qu'on mange aujourd'hui&nbsp;:</b> le repas de midi et celui du soir. Le repas à venir est entouré. Touchez <span class="btnlike">À choisir</span> pour choisir un plat.</li>
+      <li><b>Ma liste de courses&nbsp;:</b> le nombre d'articles qu'il reste à acheter, avec une barre de progression. Touchez-la pour ouvrir la liste.</li>
+      <li><b>Idées de recettes&nbsp;:</b> une sélection qui change chaque jour. Faites défiler de gauche à droite. Le bouton <span class="btnlike">+</span> place la recette au prochain repas libre de votre menu.</li>
+    </ul>
+    <a class="totop" href="#contenu">↑ Retour au sommaire</a>
+  </section>
+
+  <!-- 4 -->
+  <section class="chap" id="menu" aria-labelledby="t4">
+    <h2 id="t4"><span class="ic" aria-hidden="true">📅</span>Le menu de la semaine</h2>
+    <p class="what">Planifiez vos repas du lundi au dimanche, midi et soir.</p>
+    <h3>Choisir un plat</h3>
+    <ol class="steps">
+      <li>Ouvrez l'onglet <span class="btnlike">Menu</span>.</li>
+      <li>Touchez un repas, par exemple « Mardi soir ».</li>
+      <li>En haut de la fenêtre, réglez d'abord le nombre de <b>couverts</b> avec <span class="btnlike">−</span> et <span class="btnlike">+</span>&nbsp;: les quantités de la liste de courses s'adapteront.</li>
+      <li>Cherchez une recette en tapant son nom, puis touchez-la&nbsp;: elle est aussitôt placée au menu.</li>
+    </ol>
+    <div class="tip">Pas de recette ce jour-là&nbsp;? Écrivez simplement «&nbsp;Restes&nbsp;», «&nbsp;Resto&nbsp;» ou «&nbsp;Chez Mamie&nbsp;» dans la case <b>Ou autre chose</b>, puis touchez <span class="btnlike">Utiliser ce texte</span>.</div>
+    <h3>Les réglages du menu</h3>
+    <ul class="plain">
+      <li>En haut, le compteur <span class="btnlike">− 👤 +</span> fixe le nombre de personnes habituel du foyer.</li>
+      <li><span class="btnlike">Vider</span> efface toute la semaine (une confirmation est demandée).</li>
+      <li><span class="btnlike">Remplir ma liste de courses</span> ajoute d'un coup tous les ingrédients des plats choisis.</li>
+    </ul>
+    <a class="totop" href="#contenu">↑ Retour au sommaire</a>
+  </section>
+
+  <!-- 5 -->
+  <section class="chap" id="courses" aria-labelledby="t5">
+    <h2 id="t5"><span class="ic" aria-hidden="true">🛒</span>La liste de courses</h2>
+    <p class="what">Une liste rangée par rayons, comme au magasin.</p>
+    <h3>Ajouter un article</h3>
+    <ol class="steps">
+      <li>Ouvrez l'onglet <span class="btnlike">Courses</span>.</li>
+      <li>Tapez le nom dans <b>Ajouter un article</b> et, si vous voulez, la quantité dans <b>Qté</b>.</li>
+      <li>Touchez le bouton vert <span class="btnlike">+</span>. L'article se range tout seul dans le bon rayon.</li>
+    </ol>
+    <p>Les ronds <b>Les essentiels</b> (lait, pain, œufs…) s'ajoutent d'un simple toucher.</p>
+    <h3>Au magasin</h3>
+    <ul class="plain">
+      <li>Touchez un article quand il est dans le panier&nbsp;: il est coché et descend en bas du rayon.</li>
+      <li><span class="btnlike">📋 Remplir depuis le menu</span> ajoute les ingrédients des repas planifiés, en additionnant les quantités.</li>
+      <li><span class="btnlike">🧹 Retirer les cochés</span> nettoie la liste une fois les courses faites.</li>
+      <li><span class="btnlike">👥 Partager</span> synchronise la liste avec votre conjoint (voir <a href="#foyer">Partager avec son foyer</a>).</li>
+    </ul>
+    <a class="totop" href="#contenu">↑ Retour au sommaire</a>
+  </section>
+
+  <!-- 6 -->
+  <section class="chap" id="frigo" aria-labelledby="t6">
+    <h2 id="t6"><span class="ic" aria-hidden="true">🧊</span>Le frigo et le chef</h2>
+    <p class="what">Dites ce que vous avez&nbsp;: Popote vous dit quoi cuisiner.</p>
+    <h3>Remplir le frigo</h3>
+    <ul class="plain">
+      <li><b>À la main&nbsp;:</b> tapez un aliment et touchez <span class="btnlike">+</span>, ou touchez les suggestions rapides.</li>
+      <li><b>En photo&nbsp;:</b> touchez <span class="btnlike">📸 Photographier mon frigo</span>, prenez la photo&nbsp;: le chef reconnaît les aliments à votre place.</li>
+    </ul>
+    <h3>Trouver quoi cuisiner</h3>
+    <ul class="plain">
+      <li><b>Dans mes recettes&nbsp;:</b> les recettes qui utilisent le plus vos ingrédients apparaissent, avec ce qui manque. <span class="btnlike">Ce soir</span> les met au menu, <span class="btnlike">+ Manquants aux courses</span> complète la liste.</li>
+      <li><span class="btnlike">✨ Inventer une recette avec ces ingrédients</span>&nbsp;: le chef imagine une recette nouvelle, que vous pouvez enregistrer.</li>
+    </ul>
+    <div class="warn">Le chef utilise une intelligence artificielle&nbsp;: il faut une connexion internet, et la réponse peut prendre 10 à 30 secondes. Le bouton <span class="btnlike">Annuler</span> arrête la demande à tout moment.</div>
+    <a class="totop" href="#contenu">↑ Retour au sommaire</a>
+  </section>
+
+  <!-- 7 -->
+  <section class="chap" id="recettes" aria-labelledby="t7">
+    <h2 id="t7"><span class="ic" aria-hidden="true">📖</span>Les recettes</h2>
+    <p class="what">Un livre de recettes commun à tous les membres de Popote &amp; Co.</p>
+    <h3>Trouver une recette</h3>
+    <ul class="plain">
+      <li>Tapez un mot dans <b>Rechercher une recette</b>.</li>
+      <li><span class="btnlike">👤 Mes recettes</span> n'affiche que celles que vous avez proposées.</li>
+      <li><span class="btnlike">📸 Découvertes</span> regroupe les plats recréés à partir d'une photo.</li>
+      <li><span class="btnlike">🗂️ Catégories</span> ouvre la liste des catégories&nbsp;: cochez-en une ou plusieurs (Desserts, Plats…), puis touchez <span class="btnlike">Afficher</span>. Retirez un filtre en touchant sa pastille ✕.</li>
+    </ul>
+    <h3>Lire une recette</h3>
+    <p>Touchez une recette pour l'ouvrir&nbsp;: ingrédients, étapes, auteur («&nbsp;Proposée par…&nbsp;») et vins associés. <span class="btnlike">📅 Ce soir</span> la place au menu du soir.</p>
+    <h3>Ajouter votre recette</h3>
+    <ol class="steps">
+      <li>Touchez la carte <span class="btnlike">+ Nouvelle recette</span>.</li>
+      <li>Ajoutez une photo (ou choisissez une icône), le nom, le temps et le nombre de personnes.</li>
+      <li>Cochez une ou plusieurs <b>catégories</b>, ou créez-en une nouvelle.</li>
+      <li>Ajoutez les ingrédients un par un avec <span class="btnlike">+ Ingrédient</span>.</li>
+      <li>Écrivez la préparation, <b>une étape par ligne</b>.</li>
+      <li>Touchez <span class="btnlike">Enregistrer</span>&nbsp;: votre recette est aussitôt visible par toute la communauté.</li>
+    </ol>
+    <h3>Recréer un plat en photo</h3>
+    <p>Un plat vous a plu au restaurant&nbsp;? Touchez <span class="btnlike">Recréer un plat en photo</span>, photographiez l'assiette&nbsp;: le chef propose la recette, que vous pouvez enregistrer.</p>
+    <h3>Partager une recette</h3>
+    <p>Dans une recette, touchez <span class="btnlike">🔗 Partager</span> pour l'envoyer par WhatsApp, SMS… Le lien <b>ne s'ouvre que pour les membres</b> de Popote &amp; Co&nbsp;: une personne qui n'est pas membre voit seulement l'écran de demande d'accès.</p>
+    <div class="tip">Pour protéger les recettes de la communauté, le texte ne peut pas être copié, les photos ne peuvent pas être enregistrées et l'impression est désactivée. Les cases où vous écrivez fonctionnent normalement.</div>
+    <h3>Modifier ou supprimer</h3>
+    <ul class="plain">
+      <li>Vous pouvez <b>modifier vos propres recettes</b> (bouton <span class="btnlike">✏️ Modifier</span>). <span class="btnlike">↩️ Version précédente</span> annule la dernière modification.</li>
+      <li>Les recettes des autres membres se lisent, mais ne se modifient pas.</li>
+      <li>La <b>suppression</b> est réservée aux administrateurs, pour protéger le livre commun. Une recette à retirer&nbsp;? Prévenez-les.</li>
+    </ul>
+    <a class="totop" href="#contenu">↑ Retour au sommaire</a>
+  </section>
+
+  <!-- 8 -->
+  <section class="chap" id="cave" aria-labelledby="t8">
+    <h2 id="t8"><span class="ic" aria-hidden="true">🍷</span>La cave à vin</h2>
+    <p class="what">Votre cave personnelle, et les vins découverts par la communauté.</p>
+    <h3>Ajouter une bouteille</h3>
+    <p>Trois façons, au choix&nbsp;:</p>
+    <ol class="steps">
+      <li><b>▥ Scanner le code-barres</b>&nbsp;: visez le code-barres de la contre-étiquette. Si le vin est connu, la fiche se remplit toute seule. Sinon, tapez les chiffres ou passez à la photo.</li>
+      <li><b>🍷 Photographier l'étiquette</b>&nbsp;: le sommelier lit l'étiquette et remplit la fiche, avec la dégustation et les accords.</li>
+      <li><b>+ Ajouter un vin sans photo</b>&nbsp;: vous remplissez la fiche vous-même.</li>
+    </ol>
+    <p>Vérifiez la fiche, puis touchez <span class="btnlike">Ajouter à notre cave</span>.</p>
+    <div class="tip">Sur une fiche incomplète, <span class="btnlike">✨ Demander l'avis du sommelier</span> ajoute les cépages, la dégustation, la garde et les accords.</div>
+    <h3>Gérer sa cave</h3>
+    <ul class="plain">
+      <li><b>Stock&nbsp;:</b> <span class="btnlike">−</span> et <span class="btnlike">+</span> pour le nombre de bouteilles. Une bouteille bue&nbsp;? Mettez le stock à 0&nbsp;: la fiche reste en souvenir.</li>
+      <li><b>Note&nbsp;:</b> touchez les étoiles ★.</li>
+      <li><b>Associé à&nbsp;:</b> reliez le vin à une de vos recettes, ou notez «&nbsp;bu avec…&nbsp;».</li>
+      <li><b>Filtres&nbsp;:</b> par couleur (Rouge, Blanc…), et <span class="btnlike">👤 Mes vins</span> si vous partagez la cave avec votre foyer.</li>
+    </ul>
+    <h3>🌍 Les vins de la communauté</h3>
+    <p>En haut de la Cave, touchez <span class="btnlike">🌍 Communauté</span> pour découvrir les vins des autres membres. <b>Aucun nom n'est affiché</b>&nbsp;: personne ne sait qui a ajouté quel vin. Vos stocks, vos notes et vos plats restent privés.</p>
+    <p>Un vin vous tente&nbsp;? Ouvrez-le et touchez <span class="btnlike">＋ Ajouter à notre cave</span>.</p>
+    <a class="totop" href="#contenu">↑ Retour au sommaire</a>
+  </section>
+
+  <!-- 9 -->
+  <section class="chap" id="foyer" aria-labelledby="t9">
+    <h2 id="t9"><span class="ic" aria-hidden="true">👥</span>Partager avec son foyer</h2>
+    <p class="what">À deux (ou plus), le menu, les courses, le frigo et la cave se mettent à jour en direct sur tous les téléphones.</p>
+    <h3>Créer le foyer (une seule personne le fait)</h3>
+    <ol class="steps">
+      <li>Onglet <span class="btnlike">Courses</span>, touchez <span class="btnlike">👥 Partager</span>.</li>
+      <li>Touchez <span class="btnlike">Créer notre foyer partagé</span>. Un code de 8 caractères s'affiche (par exemple ABCD-EFGH).</li>
+      <li>Touchez <span class="btnlike">Envoyer l'invitation</span> pour l'envoyer par SMS ou WhatsApp.</li>
+    </ol>
+    <h3>Rejoindre un foyer</h3>
+    <ol class="steps">
+      <li>Ouvrez le lien d'invitation reçu, <b>ou</b> allez dans <span class="btnlike">Courses</span> puis <span class="btnlike">👥 Partager</span>.</li>
+      <li>Tapez le code dans <b>Rejoindre avec un code</b>, puis touchez <span class="btnlike">Rejoindre</span>.</li>
+      <li>Vos listes sont fusionnées, sans doublons. Si le code est mal tapé, l'app vous le signale et ne rejoint rien&nbsp;: vérifiez les 8 caractères.</li>
+    </ol>
+    <div class="tip">Le code du foyer est votre clé&nbsp;: ne le donnez qu'aux personnes de votre maison. Pour arrêter, touchez <span class="btnlike">Quitter le partage</span>&nbsp;: vous gardez une copie de tout.</div>
+    <a class="totop" href="#contenu">↑ Retour au sommaire</a>
+  </section>
+
+  <!-- 10 -->
+  <section class="chap" id="profil" aria-labelledby="t10">
+    <h2 id="t10"><span class="ic" aria-hidden="true">👤</span>Mon profil, mes données, mon compte</h2>
+    <p class="what">Touchez le logo rond en haut à droite.</p>
+    <ul class="plain">
+      <li><b>Prénom&nbsp;:</b> modifiez le prénom affiché en haut de l'écran, puis <span class="btnlike">Enregistrer</span>. Chaque téléphone a le sien.</li>
+      <li><b>Mode d'emploi&nbsp;:</b> le bouton <span class="btnlike">❓ Mode d'emploi</span> rouvre cette page à tout moment.</li>
+      <li><b>📣 Faire connaître Popote&nbsp;:</b> envoie un petit message de présentation avec le lien de l'app. La personne fait sa demande d'accès, et seuls Amélie ou D'jims peuvent la valider.</li>
+      <li><b>Se déconnecter&nbsp;:</b> vos données restent sur le téléphone&nbsp;; il faudra vous reconnecter avec Google.</li>
+    </ul>
+    <h3>🔒 Mes données</h3>
+    <p>En bas du profil, la rubrique <b>Mes données</b> regroupe vos droits sur vos informations personnelles&nbsp;:</p>
+    <ul class="plain">
+      <li><span class="btnlike">Confidentialité</span> explique quelles données l'app garde, où et pourquoi. Elle est aussi en bas de chaque écran (🔒 Confidentialité).</li>
+      <li><span class="btnlike">📥 Mes données</span> télécharge un fichier avec tout ce qui vous concerne&nbsp;: compte, recettes proposées, cave, menu, courses, frigo.</li>
+    </ul>
+    <h3>Supprimer mon compte</h3>
+    <ol class="steps">
+      <li>Touchez le logo rond, puis <span class="btnlike">🗑️ Supprimer mon compte</span>.</li>
+      <li>Lisez ce qui sera effacé. Si vous êtes seul à utiliser votre foyer partagé, cochez la case pour l'effacer aussi.</li>
+      <li>Tapez <b>SUPPRIMER</b> dans la case, puis touchez <span class="btnlike">Supprimer définitivement</span>.</li>
+      <li>Google vous demande de confirmer votre compte une dernière fois. Choisissez-le&nbsp;: tout est effacé, et l'app revient à l'écran de connexion.</li>
+    </ol>
+    <div class="warn">La suppression est <b>définitive</b>. Vos recettes partagées restent dans le livre commun, mais <b>sans votre nom</b>. Téléchargez <span class="btnlike">📥 Mes données</span> avant si vous voulez garder une copie.</div>
+    <a class="totop" href="#contenu">↑ Retour au sommaire</a>
+  </section>
+
+  <!-- 11 -->
+  <section class="chap" id="faq" aria-labelledby="t11">
+    <h2 id="t11"><span class="ic" aria-hidden="true">❓</span>Questions fréquentes</h2>
+    <p class="what">Touchez une question pour lire la réponse.</p>
+    <details><summary>Est-ce gratuit&nbsp;?</summary><div><p>Oui, entièrement, et sans publicité.</p></div></details>
+    <details><summary>Mon écran affiche « Demande envoyée »</summary><div><p>Votre demande d'accès attend d'être validée par Amélie ou D'jims. Dès qu'elle l'est, l'app s'ouvre toute seule. Si l'écran affiche « Accès non accordé », votre demande n'a pas été acceptée&nbsp;: contactez-les.</p></div></details>
+    <details><summary>Puis-je inviter quelqu'un&nbsp;?</summary><div><p>Oui&nbsp;: touchez le logo rond puis <span class="btnlike">📣 Faire connaître Popote</span>. La personne devra faire sa demande d'accès&nbsp;: seuls les administrateurs peuvent l'accepter.</p></div></details>
+    <details><summary>Pourquoi je ne peux pas copier une recette&nbsp;?</summary><div><p>Les recettes appartiennent à la communauté&nbsp;: pour éviter qu'elles circulent en dehors, la copie et l'enregistrement des photos sont désactivés. Pour faire découvrir une recette à un membre, utilisez <span class="btnlike">🔗 Partager</span>.</p></div></details>
+    <details><summary>Qui voit mes informations&nbsp;?</summary><div><p><b>Vos recettes</b> sont visibles par tous les membres, avec votre prénom. <b>Vos vins</b> apparaissent dans la Communauté sans votre nom. <b>Votre menu, vos courses, votre frigo, vos stocks et vos notes</b> restent privés, partagés seulement avec votre foyer si vous en créez un. Tous les détails sont dans la page <a href="confidentialite.html">Confidentialité</a>.</p></div></details>
+    <details><summary>Comment récupérer ou supprimer mes données&nbsp;?</summary><div><p>Touchez le logo rond, puis, dans <b>Mes données</b>&nbsp;: <span class="btnlike">📥 Mes données</span> pour les télécharger, ou <span class="btnlike">🗑️ Supprimer mon compte</span> pour tout effacer. Voir <a href="#profil">Mon profil et mon compte</a>.</p></div></details>
+    <details><summary>Pourquoi je ne peux pas supprimer une recette&nbsp;?</summary><div><p>Le livre est commun à tous&nbsp;: pour éviter les erreurs et les abus, seuls les administrateurs suppriment. Vous pouvez en revanche modifier vos propres recettes.</p></div></details>
+    <details><summary>L'app marche-t-elle sans internet&nbsp;?</summary><div><p>Oui pour consulter vos recettes, votre menu et votre liste de courses. Les changements sont envoyés dès que la connexion revient. Le chef, le sommelier et le scan ont besoin d'internet.</p></div></details>
+    <details><summary>Le chef ou le sommelier ne répond pas</summary><div><p>Les serveurs sont parfois très sollicités. Patientez, ou touchez <span class="btnlike">Annuler</span> puis réessayez une minute plus tard. Pour une photo, cadrez bien et éclairez l'aliment ou l'étiquette.</p></div></details>
+    <details><summary>Le scan du code-barres ne trouve pas mon vin</summary><div><p>La base de codes-barres connaît surtout les vins vendus en magasin. Pour un petit domaine, touchez <span class="btnlike">📷 Photographier l'étiquette</span>&nbsp;: le sommelier s'en charge.</p></div></details>
+    <details><summary>La caméra ne s'ouvre pas</summary><div><p>Autorisez l'accès à la caméra&nbsp;: dans Chrome, touchez le cadenas à gauche de l'adresse, puis <b>Autorisations</b> et <b>Caméra</b>.</p></div></details>
+    <details><summary>Le message « compte suspendu » s'affiche</summary><div><p>Votre compte a été mis en pause par un administrateur&nbsp;: vous pouvez toujours consulter les recettes, mais plus en ajouter ni en modifier. Contactez Amélie ou D'jims.</p></div></details>
+    <details><summary>Je ne vois pas la dernière version de l'app</summary><div><p>Fermez complètement l'app (balayez-la dans les applications récentes), puis rouvrez-la. La mise à jour se fait toute seule.</p></div></details>
+    <a class="totop" href="#contenu">↑ Retour au sommaire</a>
+  </section>
+
+  <!-- 12 -->
+  <section class="chap" id="admin" aria-labelledby="t12">
+    <h2 id="t12"><span class="ic" aria-hidden="true">👑</span>Pour les administrateurs</h2>
+    <p class="what">Réservé à Amélie et D'jims&nbsp;: touchez le logo rond, puis <span class="btnlike">👑 Administration</span>.</p>
+    <h3>Valider les inscriptions</h3>
+    <ol class="steps">
+      <li>Un point rouge sur le logo, et une notification ntfy «&nbsp;demande d'inscription&nbsp;», signalent une nouvelle demande.</li>
+      <li>Dans <b>🕓 Demandes d'inscription</b>, vérifiez le nom et l'adresse e-mail.</li>
+      <li>Touchez <span class="btnlike">Accepter</span>&nbsp;: l'app s'ouvre aussitôt chez la personne. Ou <span class="btnlike">Refuser</span>&nbsp;: elle voit «&nbsp;Accès non accordé&nbsp;».</li>
+    </ol>
+    <div class="tip">Une seule validation suffit&nbsp;: Amélie ou D'jims. Une demande refusée, ou un membre suspendu, peut être réactivé à tout moment avec <span class="btnlike">Réactiver</span>.</div>
+    <h3>Gérer la communauté</h3>
+    <ul class="plain">
+      <li><span class="btnlike">Suspendre</span>&nbsp;: le membre peut encore lire les recettes, mais plus en ajouter ni en modifier.</li>
+      <li>Supprimer une recette ou retirer un vin de la communauté&nbsp;: depuis la recette ou le vin concerné.</li>
+      <li><span class="btnlike">📥 Importer</span>, <span class="btnlike">📤 Sauvegarder</span> et <span class="btnlike">🗑️ Corbeille</span> (onglet Recettes) sont réservés aux administrateurs.</li>
+    </ul>
+    <a class="totop" href="#contenu">↑ Retour au sommaire</a>
+  </section>
+
+  <div class="bigback"><a href="./">← Revenir à Popote &amp; Co</a></div>
+</main>
+
+<footer><a href="confidentialite.html">🔒 Confidentialité</a><br>© <span id="yr">2026</span> Popote &amp; Co. Tous droits réservés.</footer>
+
+<script>
+(function(){
+  var root=document.documentElement,KEY='popote-guide-fs',sizes=[17,19,20,22,24,27,30],cur=3;
+  try{var v=parseInt(localStorage.getItem(KEY),10);if(sizes.indexOf(v)>=0)cur=sizes.indexOf(v)}catch(e){}
+  function apply(){root.style.setProperty('--fs',sizes[cur]+'px');try{localStorage.setItem(KEY,sizes[cur])}catch(e){}
+    document.getElementById('smaller').disabled=cur===0;document.getElementById('bigger').disabled=cur===sizes.length-1}
+  document.getElementById('bigger').onclick=function(){if(cur<sizes.length-1){cur++;apply()}};
+  document.getElementById('smaller').onclick=function(){if(cur>0){cur--;apply()}};
+  apply();document.getElementById('yr').textContent=new Date().getFullYear();
+  // Ouvrir directement une section : /guide.html#cave
+})();
+</script>
+</body>
+</html>

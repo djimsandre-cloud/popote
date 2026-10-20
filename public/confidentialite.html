@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Confidentialité · Popote & Co</title>
+<meta name="description" content="Quelles données Popote & Co garde, où, pourquoi, et comment les supprimer.">
+<meta name="theme-color" content="#1B6B47">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fraunces:opsz,wght@9..144,800&family=Caveat:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#1B6B47;--green-d:#0E4A31;--gold:#C9974C;--gold-l:#F6D9A2;
+  --bg:#FBF7F0;--card:#FFFFFF;--ink:#1F1B17;--muted:#5A534B;--line:#E7DFD2;--soft:#F3ECE0;
+  --tip:#E6F2EA;--tip-ink:#14532F;--warn:#FFF1DC;--warn-ink:#7A4A06;
+  --fs:20px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#13110F;--card:#1E1B18;--ink:#F4EFE7;--muted:#C9C0B4;--line:#3A342D;--soft:#2A2621;
+    --tip:#16301F;--tip-ink:#B9E6C9;--warn:#3A2A10;--warn-ink:#FFD9A0;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#13110F;--card:#1E1B18;--ink:#F4EFE7;--muted:#C9C0B4;--line:#3A342D;--soft:#2A2621;
+  --tip:#16301F;--tip-ink:#B9E6C9;--warn:#3A2A10;--warn-ink:#FFD9A0;
+}
+*{box-sizing:border-box}
+html{font-size:var(--fs);-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Nunito,system-ui,sans-serif;line-height:1.6}
+a{color:var(--green)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) a{color:#7FD3A3}}
+:root[data-theme="dark"] a{color:#7FD3A3}
+:focus-visible{outline:4px solid var(--gold);outline-offset:3px;border-radius:8px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;z-index:10}
+.skip:focus{left:12px}
+
+/* En-tête */
+header.top{position:sticky;top:0;z-index:5;background:linear-gradient(170deg,var(--green-d),var(--green));color:#fff;
+  padding:calc(10px + env(safe-area-inset-top,0px)) 16px 12px;box-shadow:0 4px 16px rgba(0,0,0,.18)}
+.toprow{display:flex;align-items:center;gap:12px;max-width:760px;margin:0 auto}
+.toprow img{width:52px;height:52px;border-radius:50%;box-shadow:0 0 0 3px var(--gold-l);flex:none}
+.brand{font-family:Fraunces,Georgia,serif;font-weight:800;font-size:25px;line-height:1.1;white-space:nowrap}
+.brand .amp{color:#FFD39A}
+.brand small{display:block;font-family:Nunito,sans-serif;font-size:14px;font-weight:700;opacity:.9}
+.grow{flex:1}
+.tools{display:flex;gap:6px}
+.tools button,.back{border:0;border-radius:999px;min-width:48px;min-height:48px;padding:0 14px;background:rgba(255,255,255,.18);color:#fff;
+  font:800 18px Nunito,sans-serif;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+.tools button:active{transform:scale(.96)}
+
+main{max-width:760px;margin:0 auto;padding:18px 16px 40px}
+h1{font-family:Fraunces,Georgia,serif;font-size:2rem;line-height:1.15;margin:8px 0 6px}
+.lead{font-size:1.1rem;color:var(--muted);margin:0 0 18px}
+.sig{font-family:Caveat,cursive;font-size:1.6rem;color:var(--gold);margin:-4px 0 14px}
+
+/* Sommaire */
+nav.toc{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:14px;margin:0 0 26px}
+nav.toc h2{margin:2px 6px 10px;font-size:1.15rem}
+nav.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+nav.toc a{display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 14px;border-radius:16px;background:var(--soft);
+  color:var(--ink);text-decoration:none;font-weight:800}
+nav.toc a span{font-size:1.5rem;width:36px;text-align:center;flex:none}
+
+/* Sections */
+section.chap{background:var(--card);border:2px solid var(--line);border-radius:24px;padding:18px 18px 8px;margin:0 0 22px;scroll-margin-top:92px}
+section.chap>h2{display:flex;align-items:center;gap:12px;margin:0 0 6px;font-size:1.45rem;line-height:1.2}
+section.chap>h2 .ic{display:grid;place-items:center;width:52px;height:52px;border-radius:16px;background:var(--tip);font-size:1.6rem;flex:none}
+section.chap>p.what{color:var(--muted);margin:0 0 14px;font-size:1.02rem}
+h3{font-size:1.12rem;margin:20px 0 8px}
+ol.steps{counter-reset:s;list-style:none;margin:0 0 12px;padding:0}
+ol.steps>li{counter-increment:s;position:relative;padding:4px 0 12px 54px;min-height:44px}
+ol.steps>li::before{content:counter(s);position:absolute;left:0;top:2px;width:40px;height:40px;border-radius:50%;
+  background:var(--green);color:#fff;font-weight:900;display:grid;place-items:center;font-size:1.05rem}
+ul.plain{margin:0 0 12px;padding-left:1.2em}
+ul.plain li{margin:0 0 8px}
+.btnlike{display:inline;padding:1px 8px;border-radius:10px;background:var(--soft);border:1px solid var(--line);font-weight:800;-webkit-box-decoration-break:clone;box-decoration-break:clone;line-height:1.9}
+main{overflow-wrap:anywhere}
+.tip,.warn{border-radius:16px;padding:12px 14px 12px 50px;position:relative;margin:4px 0 16px;font-weight:600}
+.tip{background:var(--tip);color:var(--tip-ink)}
+.warn{background:var(--warn);color:var(--warn-ink)}
+.tip::before,.warn::before{position:absolute;left:14px;top:10px;font-size:1.3rem}
+.tip::before{content:"💡"}.warn::before{content:"⚠️"}
+.tip b,.warn b{font-weight:900}
+.totop{display:inline-block;margin:4px 0 10px;font-weight:800;font-size:.95rem}
+details{border:2px solid var(--line);border-radius:16px;margin:0 0 10px;background:var(--soft)}
+summary{cursor:pointer;padding:14px 16px;font-weight:800;min-height:52px;list-style-position:inside}
+details>div{padding:0 16px 14px}
+footer{text-align:center;color:var(--muted);font-size:.85rem;padding:10px 16px calc(24px + env(safe-area-inset-bottom,0px))}
+.bigback{display:flex;justify-content:center;margin:6px 0 26px}
+.bigback a{display:inline-flex;align-items:center;gap:10px;min-height:56px;padding:0 26px;border-radius:999px;background:var(--green);color:#fff;
+  text-decoration:none;font-weight:900;font-size:1.05rem;box-shadow:0 6px 16px rgba(27,107,71,.3)}
+@media print{header.top,.tools,.bigback,.totop,.skip{display:none}section.chap{break-inside:avoid;border-color:#ccc}}
+table.data{width:100%;border-collapse:collapse;margin:6px 0 14px;font-size:.95rem}
+table.data th,table.data td{border-bottom:1px solid var(--line);padding:10px 6px;text-align:left;vertical-align:top}
+table.data th{font-size:.85rem;color:var(--muted)}
+.upd{color:var(--muted);font-size:.9rem;margin:-6px 0 18px}
+</style>
+</head>
+<body>
+<a class="skip" href="#contenu">Aller au contenu</a>
+<header class="top">
+  <div class="toprow">
+    <img src="icons/icon-192.png" alt="">
+    <div class="brand">Popote <span class="amp">&amp;</span> Co<small>Confidentialité</small></div>
+    <span class="grow"></span>
+    <div class="tools" role="group" aria-label="Taille du texte">
+      <button type="button" id="smaller" aria-label="Réduire la taille du texte">A−</button>
+      <button type="button" id="bigger" aria-label="Agrandir la taille du texte">A+</button>
+    </div>
+  </div>
+</header>
+
+<main id="contenu">
+  <h1>Vos données dans Popote &amp; Co</h1>
+  <p class="upd">Dernière mise à jour : 19 octobre 2026</p>
+  <p class="lead">Popote &amp; Co est une application gratuite, sans publicité, créée pour partager des recettes entre amis et en famille. Nous gardons le moins de données possible, uniquement pour faire fonctionner l'app. Elles ne sont jamais vendues ni utilisées pour de la publicité.</p>
+
+  <nav class="toc" aria-labelledby="toc-t">
+    <h2 id="toc-t">Sommaire</h2>
+    <ol>
+      <li><a href="#qui"><span>🧑‍🍳</span>1. Qui est responsable</a></li>
+      <li><a href="#quoi"><span>📋</span>2. Les données gardées, et pourquoi</a></li>
+      <li><a href="#qui-voit"><span>👀</span>3. Qui voit quoi</a></li>
+      <li><a href="#ou"><span>🌐</span>4. Où sont les données</a></li>
+      <li><a href="#duree"><span>⏳</span>5. Combien de temps</a></li>
+      <li><a href="#droits"><span>⚖️</span>6. Vos droits</a></li>
+      <li><a href="#supprimer"><span>🗑️</span>7. Supprimer mon compte</a></li>
+    </ol>
+  </nav>
+
+  <section class="chap" id="qui" aria-labelledby="c1">
+    <h2 id="c1"><span class="ic" aria-hidden="true">🧑‍🍳</span>Qui est responsable</h2>
+    <p>L'application est éditée par <b>D'jims ANDRÉ</b>, avec <b>Amélie</b> comme administratrice. Pour toute question sur vos données&nbsp;:</p>
+    <p><a href="mailto:djims.andre@gmail.com?subject=Popote%20%26%20Co%20-%20mes%20donn%C3%A9es">djims.andre@gmail.com</a></p>
+    <a class="totop" href="#contenu">↑ Retour au sommaire</a>
+  </section>
+
+  <section class="chap" id="quoi" aria-labelledby="c2">
+    <h2 id="c2"><span class="ic" aria-hidden="true">📋</span>Les données gardées, et pourquoi</h2>
+    <table class="data">
+      <thead><tr><th scope="col">Donnée</th><th scope="col">Pourquoi</th></tr></thead>
+      <tbody>
+        <tr><td><b>Votre compte Google</b> : nom, e-mail, photo de profil</td><td>Vous connecter, et afficher votre prénom sur les recettes que vous proposez.</td></tr>
+        <tr><td><b>Votre fiche membre</b> : nom, e-mail, photo, date d'inscription et de dernière visite, statut de votre demande (en attente, acceptée) ; en cas d'abus, la date de suspension ou de refus</td><td>Valider les inscriptions (l'app est réservée à ses membres), gérer la communauté et éviter les abus.</td></tr>
+        <tr><td><b>Vos recettes partagées</b> : texte, photos, prénom de l'auteur</td><td>Les partager avec tous les membres : c'est le but de l'app.</td></tr>
+        <tr><td><b>Vos vins</b> : fiche du vin et photo d'étiquette (sans vos notes de dégustation, votre stock ni votre note)</td><td>Les afficher dans « Vins de la communauté », <b>sans votre nom ni aucun identifiant</b>. Un lien privé, que vous seul pouvez lire, vous permet de mettre à jour la fiche.</td></tr>
+        <tr><td><b>Votre foyer</b> : menu, courses, frigo, cave, corbeille</td><td>Les synchroniser entre les téléphones de votre foyer, si vous en créez un.</td></tr>
+        <tr><td><b>Sur votre téléphone</b> : prénom affiché, réglages, copie hors connexion</td><td>Faire marcher l'app sans internet et retenir vos préférences.</td></tr>
+      </tbody>
+    </table>
+    <div class="tip"><b>Ce que l'app ne collecte pas&nbsp;:</b> pas de position GPS, pas de contacts, pas de publicité, pas de cookie de suivi. La caméra ne s'allume que lorsque vous touchez un bouton photo ou scan.</div>
+    <h3>Les photos analysées par le chef et le sommelier</h3>
+    <p>Quand vous photographiez votre frigo, un plat ou une étiquette, l'image est envoyée à l'intelligence artificielle de Google (Gemini) pour être analysée. Seule la petite photo que vous choisissez d'enregistrer est gardée dans l'app.</p>
+    <a class="totop" href="#contenu">↑ Retour au sommaire</a>
+  </section>
+
+  <section class="chap" id="qui-voit" aria-labelledby="c3">
+    <h2 id="c3"><span class="ic" aria-hidden="true">👀</span>Qui voit quoi</h2>
+    <ul class="plain">
+      <li><b>Tous les membres</b> voient les recettes partagées (avec le prénom de l'auteur) et les vins de la communauté (sans nom).</li>
+      <li><b>Les personnes de votre foyer</b>, et elles seules, voient votre menu, vos courses, votre frigo et votre cave.</li>
+      <li><b>Les administrateurs</b> (D'jims et Amélie) voient la liste des membres : nom, e-mail, photo, dates et nombre de recettes. Ils examinent chaque demande d'inscription pour l'accepter ou la refuser. À chaque nouvelle demande, ils reçoivent une simple notification « demande d'inscription », sans nom ni adresse.</li>
+      <li><b>Personne d'autre.</b> Les données ne sont ni vendues, ni louées, ni transmises à des annonceurs.</li>
+    </ul>
+    <a class="totop" href="#contenu">↑ Retour au sommaire</a>
+  </section>
+
+  <section class="chap" id="ou" aria-labelledby="c4">
+    <h2 id="c4"><span class="ic" aria-hidden="true">🌐</span>Où sont les données</h2>
+    <p>L'app utilise des services reconnus, chacun pour une tâche précise&nbsp;:</p>
+    <ul class="plain">
+      <li><b>Google Firebase</b> : hébergement de l'app, connexion avec Google et base de données. Google peut traiter des données hors de l'Union européenne, avec les garanties prévues par le RGPD (clauses contractuelles types).</li>
+      <li><b>Google Gemini</b> (via Firebase) : analyse des photos par le chef et le sommelier.</li>
+      <li><b>Google reCAPTCHA</b> : protection contre les robots quand l'IA est utilisée.</li>
+      <li><b>Open Food Facts</b> : seul le code-barres scanné est envoyé, pour retrouver la bouteille.</li>
+      <li><b>ntfy.sh</b> : envoi des notifications « demande d'inscription » aux administrateurs. Le message ne contient aucune donnée personnelle.</li>
+    </ul>
+    <a class="totop" href="#contenu">↑ Retour au sommaire</a>
+  </section>
+
+  <section class="chap" id="duree" aria-labelledby="c5">
+    <h2 id="c5"><span class="ic" aria-hidden="true">⏳</span>Combien de temps</h2>
+    <p>Vos données sont gardées tant que votre compte existe. Quand vous le supprimez, elles sont effacées immédiatement (voir ci-dessous). Les notifications envoyées aux administrateurs disparaissent du service ntfy.sh au bout de quelques heures.</p>
+    <a class="totop" href="#contenu">↑ Retour au sommaire</a>
+  </section>
+
+  <section class="chap" id="droits" aria-labelledby="c6">
+    <h2 id="c6"><span class="ic" aria-hidden="true">⚖️</span>Vos droits</h2>
+    <p>Le règlement européen sur la protection des données (RGPD) vous donne le droit de consulter, corriger, récupérer et effacer vos données, et de vous opposer à leur utilisation. Vous pouvez le faire vous-même, dans l'app&nbsp;:</p>
+    <ol class="steps">
+      <li>Touchez le <b>logo rond</b> en haut à droite pour ouvrir votre profil.</li>
+      <li><span class="btnlike">📥 Mes données</span> télécharge un fichier avec toutes vos informations.</li>
+      <li><span class="btnlike">🗑️ Supprimer mon compte</span> efface votre compte et vos données.</li>
+    </ol>
+    <p>Vous pouvez aussi écrire à <a href="mailto:djims.andre@gmail.com">djims.andre@gmail.com</a>. En cas de désaccord, vous pouvez saisir la CNIL&nbsp;: <a href="https://www.cnil.fr/fr/plaintes">cnil.fr/fr/plaintes</a>.</p>
+    <p>Utiliser l'app, c'est accepter ce fonctionnement. La protection contre les abus (suspension, notification des inscriptions) repose sur l'intérêt légitime de garder une communauté saine.</p>
+    <a class="totop" href="#contenu">↑ Retour au sommaire</a>
+  </section>
+
+  <section class="chap" id="supprimer" aria-labelledby="c7">
+    <h2 id="c7"><span class="ic" aria-hidden="true">🗑️</span>Supprimer mon compte</h2>
+    <p>Dans votre profil, touchez <span class="btnlike">🗑️ Supprimer mon compte</span>, puis confirmez. L'app efface alors&nbsp;:</p>
+    <ul class="plain">
+      <li>votre <b>fiche membre</b> et votre <b>connexion Google</b> à Popote &amp; Co&nbsp;;</li>
+      <li>votre nom sur vos <b>recettes partagées</b> : elles restent dans le livre commun, mais deviennent <b>anonymes</b>, plus rien ne les relie à vous&nbsp;;</li>
+      <li>le lien entre vous et les <b>vins</b> que vous avez publiés, qui restent anonymes&nbsp;;</li>
+      <li>les données de votre <b>foyer</b>, si vous cochez la case (à ne cocher que si personne d'autre ne l'utilise)&nbsp;;</li>
+      <li>toutes les données enregistrées <b>sur votre téléphone</b>.</li>
+    </ul>
+    <div class="warn">La suppression est définitive. Pensez à télécharger <span class="btnlike">📥 Mes données</span> avant si vous voulez garder vos recettes. Vous voulez aussi faire retirer vos recettes du livre commun&nbsp;? Écrivez-nous&nbsp;: un administrateur s'en charge.</div>
+    <a class="totop" href="#contenu">↑ Retour au sommaire</a>
+  </section>
+
+  <div class="bigback"><a href="./">← Revenir à Popote &amp; Co</a></div>
+</main>
+
+<footer><a href="guide.html">❓ Mode d'emploi</a><br>© <span id="yr">2026</span> Popote &amp; Co. Tous droits réservés.</footer>
+
+<script>
+(function(){
+  var root=document.documentElement,KEY='popote-guide-fs',sizes=[17,19,20,22,24,27,30],cur=3;
+  try{var v=parseInt(localStorage.getItem(KEY),10);if(sizes.indexOf(v)>=0)cur=sizes.indexOf(v)}catch(e){}
+  function apply(){root.style.setProperty('--fs',sizes[cur]+'px');try{localStorage.setItem(KEY,sizes[cur])}catch(e){}
+    document.getElementById('smaller').disabled=cur===0;document.getElementById('bigger').disabled=cur===sizes.length-1}
+  document.getElementById('bigger').onclick=function(){if(cur<sizes.length-1){cur++;apply()}};
+  document.getElementById('smaller').onclick=function(){if(cur>0){cur--;apply()}};
+  apply();document.getElementById('yr').textContent=new Date().getFullYear();
+  // Ouvrir directement une section : /guide.html#cave
+})();
+</script>
+</body>
+</html>
