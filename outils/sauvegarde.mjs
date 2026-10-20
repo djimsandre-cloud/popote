@@ -54,7 +54,7 @@ async function collection(tk, chemin){
     for (const d of j.documents || []) {
       const rel = d.name.split("/documents/")[1];
       if (d.fields || d.createTime) { DOCS[rel] = d.fields || {}; n++; }
-      for (const c of await sousCollections(tk, d.name)) await collection(tk, rel + "/" + c);
+      for (const c of await sousCollections(tk, "https://firestore.googleapis.com/v1/" + d.name)) await collection(tk, rel + "/" + c);
     }
     page = j.nextPageToken || ""; } while (page);
 }
