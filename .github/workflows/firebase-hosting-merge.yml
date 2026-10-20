@@ -7,7 +7,25 @@ on:
     branches:
       - main
 jobs:
+  # Tests automatiques : si l'un échoue, la mise en ligne est bloquée (la version en ligne reste intacte)
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Tests automatiques
+        run: |
+          npm i --no-save --no-package-lock playwright@1.64.1
+          npx playwright install --with-deps chromium
+          node tests/tests.mjs
+      - name: Prévenir si la mise en ligne est bloquée
+        if: failure()
+        run: curl -s -H "Title: Popote & Co : mise en ligne bloquée" -H "Tags: warning" -H "Priority: 4" -d "Un test automatique a échoué : la nouvelle version n'a pas été publiée, l'ancienne reste en ligne." https://ntfy.sh/caddybook-d4535629da
   build_and_deploy:
+    needs: tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
