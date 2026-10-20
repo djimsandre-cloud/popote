@@ -1,0 +1,34 @@
+# Chaque dimanche : sauvegarde chiffrée de toutes les données Firestore (branche « sauvegarde », 8 dernières semaines)
+# Seule la clé privée de D'jims permet de la relire (voir outils/restaurer.mjs)
+name: Sauvegarde des données
+on:
+  schedule:
+    - cron: "13 2 * * 0"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sauvegarde:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Exporter et chiffrer les données
+        env:
+          SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_POPOTE_2026 }}
+          PROJECT: popote-2026
+        run: node outils/sauvegarde.mjs
+      - name: Ranger sur la branche « sauvegarde »
+        run: |
+          mkdir -p "$RUNNER_TEMP/b" && cp sortie/*.enc outils/restaurer.mjs "$RUNNER_TEMP/b/"
+          mkdir -p "$RUNNER_TEMP/old"
+          if git fetch -q --depth 1 origin sauvegarde 2>/dev/null; then git --work-tree="$RUNNER_TEMP/old" checkout FETCH_HEAD -- . 2>/dev/null || true; fi
+          cp -n "$RUNNER_TEMP"/old/sauvegarde-*.enc "$RUNNER_TEMP/b/" 2>/dev/null || true
+          cd "$RUNNER_TEMP/b" && ls -1 sauvegarde-*.enc | sort | head -n -8 | xargs -r rm -f
+          printf '# Sauvegardes chiffrées de %s\n\nUne sauvegarde par semaine (les 8 dernières). Contenu chiffré : illisible sans la clé privée de D'"'"'jims.\n\nRestaurer : node restaurer.mjs cle-privee-sauvegardes.pem sauvegarde-AAAA-MM-JJ.enc > donnees.json\n\n© D'"'"'jims ANDRÉ · Tous droits réservés\n' "popote-2026" > README.md
+          git init -q -b sauvegarde && git add -A && git -c user.name=sauvegarde -c user.email=sauvegarde@users.noreply.github.com commit -qm "Sauvegarde du $(date -u +%F)"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" sauvegarde
+          ls -1 sauvegarde-*.enc
