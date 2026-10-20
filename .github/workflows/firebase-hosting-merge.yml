@@ -23,7 +23,11 @@ jobs:
           node tests/tests.mjs
       - name: Prévenir si la mise en ligne est bloquée
         if: failure()
-        run: curl -s -H "Title: Popote & Co : mise en ligne bloquée" -H "Tags: warning" -H "Priority: 4" -d "Un test automatique a échoué : la nouvelle version n'a pas été publiée, l'ancienne reste en ligne." https://ntfy.sh/caddybook-d4535629da
+        run: |
+          cat > "$RUNNER_TEMP/n.json" <<'FIN'
+          {"topic": "caddybook-d4535629da", "title": "Popote & Co : mise en ligne bloquée", "message": "Un test automatique a échoué : la nouvelle version n'a pas été publiée, l'ancienne reste en ligne.", "tags": ["warning"], "priority": 4}
+          FIN
+          curl -s -d @"$RUNNER_TEMP/n.json" https://ntfy.sh/
   build_and_deploy:
     needs: tests
     runs-on: ubuntu-latest
