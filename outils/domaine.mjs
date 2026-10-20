@@ -1,7 +1,7 @@
 // Tableau de bord : autorise la page du tableau de bord à se connecter à ce projet, et affiche la configuration web publique
 // © D'jims ANDRÉ · Tous droits réservés
 import { createSign } from "node:crypto";
-const PROJECT = process.env.PROJECT, DOMAINE = "salle-de-jeux-2026.web.app", NOW = Date.now();
+const PROJECT = process.env.PROJECT, DOMAINE = "djims-tableau.web.app", NOW = Date.now();
 // 1. Jeton d'accès Google à partir du compte de service (sans dépendance)
 async function token(){
   const sa = JSON.parse(process.env.SA || "{}"); if (!sa.private_key) throw new Error("Compte de service manquant");
