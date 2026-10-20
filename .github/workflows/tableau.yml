@@ -1,0 +1,17 @@
+# À la demande : relie ce projet au tableau de bord de D'jims (domaine autorisé + configuration publique)
+name: Relier au tableau de bord
+on:
+  workflow_dispatch:
+jobs:
+  tableau:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - env:
+          SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_POPOTE_2026 }}
+          PROJECT: popote-2026
+        run: node outils/domaine.mjs
