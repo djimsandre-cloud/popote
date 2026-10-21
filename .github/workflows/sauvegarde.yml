@@ -32,3 +32,10 @@ jobs:
           git init -q -b sauvegarde && git add -A && git -c user.name=sauvegarde -c user.email=sauvegarde@users.noreply.github.com commit -qm "Sauvegarde du $(date -u +%F)"
           git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" sauvegarde
           ls -1 sauvegarde-*.enc
+      - name: Signaler au tableau de bord (et alerter si la sauvegarde a échoué)
+        if: always()
+        env:
+          ETAT: ${{ job.status }}
+        run: |
+          curl -s -H "Content-Type: application/json" -d "{\"topic\":\"sante-nl9eqcdvcfi6rbdp\",\"title\":\"popote|$ETAT\",\"message\":\"$(date -u +%FT%TZ)\"}" https://ntfy.sh/ > /dev/null
+          if [ "$ETAT" != "success" ]; then curl -s -H "Content-Type: application/json" -d "{\"topic\":\"caddybook-d4535629da\",\"title\":\"⚠️ Sauvegarde échouée : Popote & Co\",\"message\":\"La sauvegarde chiffrée de la semaine n'a pas pu se faire. Elle sera retentée dimanche prochain.\",\"tags\":[\"warning\"],\"priority\":4}" https://ntfy.sh/ > /dev/null; fi
