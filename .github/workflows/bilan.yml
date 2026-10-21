@@ -1,4 +1,4 @@
-# Chaque lundi matin : bilan de la semaine de Popote & Co envoyé par ntfy
+# Chaque lundi matin (déposé sur le sujet de collecte, puis réuni dans le bilan de toutes les applis) : bilan de la semaine de Popote & Co envoyé par ntfy
 name: Bilan de la semaine
 on:
   schedule:
@@ -16,4 +16,5 @@ jobs:
       - name: Envoyer le bilan
         env:
           SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_POPOTE_2026 }}
+          NTFY_TOPIC: bilans-w4lrlmvm6c7xtmdo
         run: node outils/bilan.mjs
