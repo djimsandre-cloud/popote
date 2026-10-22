@@ -1,6 +1,6 @@
 // Popote : fonctionne hors connexion. Augmentez VERSION à chaque mise à jour.
-const VERSION = 'popote-v61';
-const SHELL = ['/', '/index.html', '/guide.html', '/confidentialite.html', '/manifest.json', '/icons/icon-192.png', '/icons/icon-512.png'];
+const VERSION = 'popote-v62';
+const SHELL = ['/', '/index.html', '/guide.html', '/confidentialite.html', '/manifest.json', '/pam-outils.js', '/icons/icon-192.png', '/icons/icon-512.png'];
 // Seuls ces domaines sont mis en cache (jamais la base de données Firestore).
 const CACHEABLE = [self.location.origin, 'https://fonts.googleapis.com', 'https://fonts.gstatic.com', 'https://www.gstatic.com'];
 

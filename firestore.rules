@@ -152,5 +152,20 @@ service cloud.firestore {
     match /foyers/{code}/recettes/{id} {
       allow read: if member() && code.size() == 8;
     }
+    // « Signaler un problème » : chaque utilisateur connecté envoie ses messages (texte, captures, vocal) ; seul D'jims les lit
+    match /retours/{id} {
+      function djims() { return request.auth != null && request.auth.token.email == 'djims.andre@gmail.com' && request.auth.token.email_verified == true; }
+      allow create: if request.auth != null && request.resource.data.uid == request.auth.uid
+        && request.resource.data.keys().hasOnly(['app', 'uid', 'nom', 'email', 'texte', 'page', 'version', 'appareil', 'captures', 'audio', 'statut', 't'])
+        && request.resource.data.texte is string && request.resource.data.texte.size() <= 4000 && request.resource.data.statut == 'nouveau';
+      allow read, update, delete: if djims();
+      match /pj/{k} {
+        allow create: if request.auth != null && k in ['1', '2', '3', 'a'] && request.resource.data.uid == request.auth.uid
+          && get(/databases/$(database)/documents/retours/$(id)).data.uid == request.auth.uid
+          && request.resource.data.keys().hasOnly(['type', 'mime', 'data', 'uid'])
+          && request.resource.data.data is string && request.resource.data.data.size() < 1000000;
+        allow read, delete: if djims();
+      }
+    }
   }
 }

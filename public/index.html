@@ -504,6 +504,14 @@ img{-webkit-user-drag:none;user-drag:none}
 body.veil main,body.veil dialog[open] .dlg,body.veil nav.tabs{filter:blur(22px)}
 @media print{body *{display:none!important}body::before{content:"L'impression est désactivée dans Popote & Co.";display:block;padding:40px;font:700 20px sans-serif}}
 </style>
+<script src="pam-outils.js" defer></script>
+<script>
+/* Nouveautés annoncées aux membres (la plus récente en premier) : fenêtre « Quoi de neuf » une fois par version */
+window.PAM = window.PAM || {};
+PAM.maj = { app: "Popote & Co", cle: "popote", couleur: "#145C3D", pret: () => { const l = document.getElementById("login"); return !!l && l.hidden && !document.querySelector("dialog[open]"); }, nouveautes: [
+  { v: "2026-10-22", points: ["<b>🐞 Signaler un problème</b> (logo rond en haut à droite) : écrivez, ajoutez des captures ou un message vocal, D'jims le reçoit aussitôt.", "Vous êtes maintenant prévenu ici à chaque nouvelle version de l'appli.", "Prénom et nom sont demandés à chacun : les comptes sont mieux protégés."] }
+] };
+</script>
 </head>
 <body data-tab="home">
 <div class="bg" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg"><defs><pattern id="food2" width="180" height="180" patternUnits="userSpaceOnUse" patternTransform="rotate(-8)"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 78 L54 38 Q61 33 63 40 L30 82 Q22 87 22 78 Z"/><path d="M42 64 l6 4 M50 53 l5 4 M33 74 l4 3"/><path d="M60 37 l5 -13 M62 39 l13 -6 M58 35 l-1 -12"/><circle cx="132" cy="48" r="17"/><path d="M132 31 v-7 M124 33 l8 4 l8 -4"/><path d="M36 112 v20 M43 112 v20 M50 112 v20 M36 132 q7 8 14 0 M43 136 v34"/><path d="M104 162 Q112 124 150 118 Q146 156 104 162 Z M104 162 L142 124"/><circle cx="92" cy="92" r="4"/><circle cx="102" cy="98" r="4"/><circle cx="88" cy="103" r="4"/><path d="M150 88 q12 -6 18 4 q-10 4 -18 -4 Z M159 92 v18"/></g></pattern></defs><rect width="100%" height="100%" fill="url(#food2)"/></svg></div>
@@ -1217,7 +1225,7 @@ async function removePin(){if(!await askConfirm({title:'Retirer le verrou ?',msg
   S.profile.lock='';save();renderLockBox(false);toast('Verrou retiré.')}
 
 function renderAcct(){const b=$('#acctBox');if(!AUTH_ON||!ME){b.hidden=true;return}b.hidden=false;
-  b.innerHTML=`<small>Connecté avec ${esc(ME.email)}${isAdmin()?' (administrateur)':''}</small><div class="btns">${isAdmin()?'<button class="btn sm" data-act="openAdmin">👑 Administration</button>':''}<a class="btn soft sm" href="guide.html" style="text-decoration:none">❓ Mode d'emploi</a><button class="btn soft sm" data-act="promote">📣 Faire connaître Popote</button><button class="btn soft sm" data-act="signOut">Se déconnecter</button></div>
+  b.innerHTML=`<small>Connecté avec ${esc(ME.email)}${isAdmin()?' (administrateur)':''}</small><div class="btns">${isAdmin()?'<button class="btn sm" data-act="openAdmin">👑 Administration</button>':''}<a class="btn soft sm" href="guide.html" style="text-decoration:none">❓ Mode d'emploi</a><button class="btn soft sm" data-act="promote">📣 Faire connaître Popote</button><button class="btn soft sm" onclick="document.getElementById('dlgProfile').close();PAM.signaler()">🐞 Signaler un problème</button><button class="btn soft sm" onclick="document.getElementById('dlgProfile').close();PAM.quoiDeNeuf()">🎉 Quoi de neuf ?</button><button class="btn soft sm" data-act="signOut">Se déconnecter</button></div>
     <div class="privbox"><b>🔒 Mes données</b><div class="btns"><a class="btn soft sm" href="confidentialite.html" style="text-decoration:none">Confidentialité</a><button class="btn soft sm" data-act="myData">📥 Mes données</button><button class="btn danger sm" data-act="delAccount">🗑️ Supprimer mon compte</button></div></div>`}
 function openProfile(first){prof={name:(S.profile&&S.profile.name)||'',photo:(S.profile&&S.profile.photo)||''};
   $('#profTitle').textContent=first?`Bienvenue dans ${APP_NAME}`:'Mon profil';
@@ -1750,6 +1758,11 @@ const markPend=(id,kind)=>{if(AUTH_ON&&!recMerged){S.pendRec=S.pendRec||{};S.pen
 const myAuthorName=()=>String((S.profile&&S.profile.name)||(ME&&ME.name||'').split(' ')[0]||'').trim().slice(0,60);
 const canEdit=r=>!AUTH_ON||isAdmin()||!!(ME&&!ME.blocked&&r&&(!r.ownerUid||r.ownerUid===ME.uid));
 const canDelete=()=>!AUTH_ON||isAdmin();
+/* « Signaler un problème » : enregistré dans retours/ (lu par D'jims seul) et envoyé sur ntfy */
+PAM.retour={app:'Popote & Co',couleur:'#145C3D',ntfy:NTFY_TOPIC,version:'popote-v62',page:()=>{const v=document.querySelector('section.view.on');return v?v.id.replace('v-',''):''},
+  utilisateur:()=>ME?{uid:ME.uid,nom:ME.name||(S.profile&&S.profile.name)||'',email:ME.email||''}:null,
+  enregistrer:async(fiche,pieces)=>{const fb=await fbInit(),{fs,db}=fb,id=Date.now().toString(36)+Math.random().toString(36).slice(2,8),r=fs.doc(db,'retours',id);await fs.setDoc(r,fiche);
+    for(let i=0;i<pieces.length;i++)await fs.setDoc(fs.doc(db,'retours',id,'pj',pieces[i].type==='audio'?'a':String(i+1)),{...pieces[i],uid:fiche.uid});return id}};
 async function fbInit(){if(FB)return FB;
   if(window.__FAKE_FB){FB=await window.__FAKE_FB();return FB}
   const r=await fetch('/__/firebase/init.json');if(!r.ok)throw new Error('config');const cfg=await r.json();

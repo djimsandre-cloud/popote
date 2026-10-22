@@ -38,4 +38,21 @@ console.log("Membre validé complet");
   verifier(erreurs.length === 0, "aucune erreur JavaScript" + (erreurs.length ? " : " + erreurs.join(" | ") : ""));
   await fermer();
 }
+console.log("Signaler un problème, nouveautés");
+{
+  const { page, ntfy, erreurs, fermer } = await ouvrir(site("localStorage.setItem('popote-x','1');window.__DB={'membres/m2':{name:'Eva Joseph',prenom:'Eva',nom:'Joseph',email:'eva@x.fr',status:'ok',blocked:false,lastSeen:Date.now()},'approuves/m2':{at:1}};window.__USER={uid:'m2',email:'eva@x.fr',displayName:'Eva Joseph',photoURL:''}"));
+  await page.waitForTimeout(5000);
+  verifier(/Quoi de neuf dans Popote/.test(await page.innerText("body")), "membre existant : « Quoi de neuf » après la mise à jour");
+  await page.click(".pam-boite .pam-btn"); await page.waitForTimeout(300);
+  await page.evaluate("PAM.signaler()"); await page.waitForTimeout(300);
+  await page.fill("#pamTexte", "La liste de courses ne se met pas à jour");
+  await page.setInputFiles("#pamFich", new URL("./capture-essai.png", import.meta.url).pathname).catch(() => {});
+  await page.waitForTimeout(800); await page.click("#pamEnv"); await page.waitForTimeout(1500);
+  const r = await page.evaluate("Object.entries(window.__DB).filter(([k]) => k.startsWith('retours/'))");
+  const fiche = r.find(([k]) => k.split("/").length === 2);
+  verifier(fiche && fiche[1].texte.includes("courses") && fiche[1].nom === "Eva Joseph" && fiche[1].app === "Popote & Co", "problème enregistré pour le tableau de bord");
+  verifier(ntfy.some(n => n.corps.includes("problème signalé")), "D'jims prévenu sur ntfy");
+  verifier(erreurs.length === 0, "aucune erreur JavaScript" + (erreurs.length ? " : " + erreurs.join(" | ") : ""));
+  await fermer();
+}
 await fin();
