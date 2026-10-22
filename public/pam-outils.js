@@ -9,6 +9,37 @@
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const lire = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
   const ecrire = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+  // Textes : français par défaut ; créole haïtien et anglais si l'appli le demande (PAM.langue = () => "ht" | "en")
+  const TX = {
+    fr: { qdn: "🎉 Quoi de neuf dans {app} ?", qdnSous: "Les dernières améliorations de l'appli.", majDu: "Mise à jour du {d}", compris: "Compris",
+      nv: "🎉 Nouvelle version de {app} disponible", majBtn: "Mettre à jour", tard: "Plus tard",
+      sig: "🐞 Signaler un problème", sigSous: "Décris ce qui ne va pas ou ce que tu aimerais. Ton message part directement à D'jims.",
+      ph: "Exemple : quand je touche « Enregistrer », rien ne se passe…", cap: "📷 Captures", voc: "🎙️ Message vocal", stop: "⏹ Arrêter (60 s max)",
+      annul: "Annuler", env: "Envoyer", envoi: "Envoi…", info: "Jusqu'à 3 captures et 1 minute de message vocal. Sont joints aussi : ton nom, ton téléphone, l'écran où tu étais et la version de l'appli.",
+      connecte: "Connecte-toi d'abord pour pouvoir envoyer un message.", max3: "3 captures au maximum.", imgKo: "Une image n'a pas pu être lue.",
+      micKo: "L'enregistrement vocal n'est pas possible sur ce téléphone.", micRef: "Micro refusé : autorise le micro pour cette appli, ou écris ton message.",
+      long: "Message vocal trop long.", vide: "Écris quelques mots, ajoute une capture ou un message vocal.", arrete: "Arrête d'abord l'enregistrement.",
+      envKo: "Envoi impossible pour le moment ({c}). Réessaie dans un instant.", merci: "✅ Merci !", recu: "Ton message est bien arrivé chez D'jims{r}. Il s'en occupe dès que possible.", fermer: "Fermer", retirer: "Retirer" },
+    ht: { qdn: "🎉 Sa ki nouvo nan {app} ?", qdnSous: "Dènye amelyorasyon aplikasyon an.", majDu: "Mizajou {d}", compris: "Mwen konprann",
+      nv: "🎉 Gen yon nouvo vèsyon {app}", majBtn: "Mete l ajou", tard: "Pita",
+      sig: "🐞 Siyale yon pwoblèm", sigSous: "Di sa ki pa mache oswa sa ou ta renmen. Mesaj ou ale dirèkteman bay D'jims.",
+      ph: "Egzanp : lè m peze « Anrejistre », anyen pa pase…", cap: "📷 Foto ekran", voc: "🎙️ Mesaj vokal", stop: "⏹ Kanpe (60 s maks)",
+      annul: "Anile", env: "Voye", envoi: "Ap voye…", info: "Jiska 3 foto ekran ak 1 minit mesaj vokal. Nou mete tou : non ou, telefòn ou, ekran kote ou te ye a ak vèsyon aplikasyon an.",
+      connecte: "Konekte anvan pou w ka voye yon mesaj.", max3: "3 foto ekran maksimòm.", imgKo: "Nou pa t ka li yon imaj.",
+      micKo: "Telefòn sa a pa ka anrejistre vwa.", micRef: "Mikwo a refize : otorize mikwo a pou aplikasyon sa a, oswa ekri mesaj ou.",
+      long: "Mesaj vokal la twò long.", vide: "Ekri kèk mo, mete yon foto ekran oswa yon mesaj vokal.", arrete: "Kanpe anrejistreman an anvan.",
+      envKo: "Nou pa ka voye l kounye a ({c}). Eseye ankò talè.", merci: "✅ Mèsi !", recu: "Mesaj ou rive kay D'jims{r}. L ap okipe l pi vit posib.", fermer: "Fèmen", retirer: "Retire" },
+    en: { qdn: "🎉 What's new in {app}?", qdnSous: "The latest improvements to the app.", majDu: "Update of {d}", compris: "Got it",
+      nv: "🎉 A new version of {app} is available", majBtn: "Update", tard: "Later",
+      sig: "🐞 Report a problem", sigSous: "Tell us what's wrong or what you'd like. Your message goes straight to D'jims.",
+      ph: "Example: when I tap “Save”, nothing happens…", cap: "📷 Screenshots", voc: "🎙️ Voice message", stop: "⏹ Stop (60 s max)",
+      annul: "Cancel", env: "Send", envoi: "Sending…", info: "Up to 3 screenshots and 1 minute of voice message. Also attached: your name, your phone, the screen you were on and the app version.",
+      connecte: "Please sign in first to send a message.", max3: "3 screenshots at most.", imgKo: "An image could not be read.",
+      micKo: "Voice recording isn't available on this phone.", micRef: "Microphone refused: allow the microphone for this app, or type your message.",
+      long: "Voice message too long.", vide: "Write a few words, add a screenshot or a voice message.", arrete: "Stop the recording first.",
+      envKo: "Can't send right now ({c}). Please try again shortly.", merci: "✅ Thank you!", recu: "Your message reached D'jims{r}. He'll look into it as soon as possible.", fermer: "Close", retirer: "Remove" } };
+  const lg = () => { try { const l = PAM.langue && PAM.langue(); return TX[l] ? l : "fr"; } catch (e) { return "fr"; } };
+  const T = (k, v = {}) => (TX[lg()][k] || TX.fr[k]).replace(/\{(\w+)\}/g, (_, x) => v[x] != null ? v[x] : "");
   const couleur = () => (PAM.maj && PAM.maj.couleur) || (PAM.retour && PAM.retour.couleur) || "#4f46e5";
 
   // ---------- Styles (indépendants de l'appli, gros caractères, clair et sombre) ----------
@@ -55,17 +86,17 @@
       }
     }
     const liste = M.nouveautes.filter((n) => force || vu == null || n.v > vu).slice(0, force ? 3 : 4);
-    const date = (v) => { const d = new Date(v + "T12:00:00"); return isNaN(d) ? v : d.toLocaleDateString("fr-FR", { day: "numeric", month: "long" }); };
-    const f = fenetre(`<h2>🎉 Quoi de neuf dans ${esc(M.app)} ?</h2><p class="pam-sous">Les dernières améliorations de l'appli.</p>
-      ${liste.map((n) => `<p class="pam-ver">Mise à jour du ${esc(date(n.v))}</p><ul>${n.points.map((p) => `<li>${p}</li>`).join("")}</ul>`).join("")}
-      <button class="pam-btn" type="button">Compris</button>`);
+    const date = (v) => { const d = new Date(v + "T12:00:00"); return isNaN(d) ? v : d.toLocaleDateString(lg() === "en" ? "en-GB" : "fr-FR", { day: "numeric", month: "long" }); };
+    const f = fenetre(`<h2>${esc(T("qdn", { app: M.app }))}</h2><p class="pam-sous">${esc(T("qdnSous"))}</p>
+      ${liste.map((n) => `<p class="pam-ver">${esc(T("majDu", { d: date(n.v) }))}</p><ul>${(Array.isArray(n.points) ? n.points : n.points[lg()] || n.points.fr || []).map((p) => `<li>${p}</li>`).join("")}</ul>`).join("")}
+      <button class="pam-btn" type="button">${esc(T("compris"))}</button>`);
     f.querySelector(".pam-btn").onclick = () => f.remove();
     ecrire(cle, der);
   }
   PAM.quoiDeNeuf = () => quoiDeNeuf(true);
   function bandeau() {
     if (document.querySelector(".pam-bandeau")) return; styles();
-    const M = PAM.maj || {}, b = $(`<div class="pam-bandeau" role="status"><span>🎉 Nouvelle version de ${esc(M.app || "l'appli")} disponible</span><button class="pam-btn" type="button" style="--pam-c:${couleur()}">Mettre à jour</button><button class="pam-x" type="button" aria-label="Plus tard">×</button></div>`);
+    const M = PAM.maj || {}, b = $(`<div class="pam-bandeau" role="status"><span>${esc(T("nv", { app: M.app || "" }))}</span><button class="pam-btn" type="button" style="--pam-c:${couleur()}">${esc(T("majBtn"))}</button><button class="pam-x" type="button" aria-label="${esc(T("tard"))}">×</button></div>`);
     b.querySelector(".pam-btn").onclick = () => location.reload();
     b.querySelector(".pam-x").onclick = () => b.remove();
     document.body.appendChild(b);
@@ -116,64 +147,64 @@
     const R = PAM.retour;
     if (!R) return;
     const u = R.utilisateur && R.utilisateur();
-    if (!u || !u.uid) { alert("Connecte-toi d'abord pour pouvoir envoyer un message."); return; }
+    if (!u || !u.uid) { alert(T("connecte")); return; }
     const etat = { captures: [], audio: null, rec: null, morceaux: [], fin: 0 };
-    const f = fenetre(`<h2>🐞 Signaler un problème</h2>
-      <p class="pam-sous">Décris ce qui ne va pas ou ce que tu aimerais. Ton message part directement à D'jims.</p>
-      <textarea id="pamTexte" maxlength="4000" placeholder="Exemple : quand je touche « Enregistrer », rien ne se passe…"></textarea>
+    const f = fenetre(`<h2>${esc(T("sig"))}</h2>
+      <p class="pam-sous">${esc(T("sigSous"))}</p>
+      <textarea id="pamTexte" maxlength="4000" placeholder="${esc(T("ph"))}"></textarea>
       <div class="pam-vignettes" id="pamVign"></div>
       <div class="pam-audio" id="pamAudio" hidden></div>
       <div class="pam-ligne">
-        <label class="pam-btn doux">📷 Captures<input id="pamFich" type="file" accept="image/*" multiple hidden></label>
-        <button class="pam-btn doux" type="button" id="pamRec">🎙️ Message vocal</button>
+        <label class="pam-btn doux">${esc(T("cap"))}<input id="pamFich" type="file" accept="image/*" multiple hidden></label>
+        <button class="pam-btn doux" type="button" id="pamRec">${esc(T("voc"))}</button>
       </div>
       <p class="pam-err" id="pamErr" hidden></p>
-      <div class="pam-ligne"><button class="pam-btn doux" type="button" id="pamAnnul">Annuler</button><button class="pam-btn" type="button" id="pamEnv">Envoyer</button></div>
-      <p class="pam-info">Jusqu'à 3 captures et 1 minute de message vocal. Sont joints aussi : ton nom, ton téléphone, l'écran où tu étais et la version de l'appli.</p>`);
+      <div class="pam-ligne"><button class="pam-btn doux" type="button" id="pamAnnul">${esc(T("annul"))}</button><button class="pam-btn" type="button" id="pamEnv">${esc(T("env"))}</button></div>
+      <p class="pam-info">${esc(T("info"))}</p>`);
     const q = (s) => f.querySelector(s), erreur = (m) => { const e = q("#pamErr"); e.textContent = m; e.hidden = !m; };
-    const vign = () => { q("#pamVign").replaceChildren(...etat.captures.map((c, i) => { const d = $(`<div class="pam-v"><img alt="Capture ${i + 1}" src="${c.apercu}"><button type="button" aria-label="Retirer">×</button></div>`);
+    const vign = () => { q("#pamVign").replaceChildren(...etat.captures.map((c, i) => { const d = $(`<div class="pam-v"><img alt="Capture ${i + 1}" src="${c.apercu}"><button type="button" aria-label="${esc(T("retirer"))}">×</button></div>`);
       d.querySelector("button").onclick = () => { etat.captures.splice(i, 1); vign(); }; return d; })); };
     q("#pamFich").onchange = async (e) => {
       erreur(""); const fl = [...e.target.files]; e.target.value = "";
-      for (const x of fl) { if (etat.captures.length >= 3) { erreur("3 captures au maximum."); break; } try { etat.captures.push(await reduire(x)); } catch (er) { erreur("Une image n'a pas pu être lue."); } }
+      for (const x of fl) { if (etat.captures.length >= 3) { erreur(T("max3")); break; } try { etat.captures.push(await reduire(x)); } catch (er) { erreur(T("imgKo")); } }
       vign();
     };
     const peindreAudio = () => { const a = q("#pamAudio");
       if (!etat.audio) { a.hidden = true; a.replaceChildren(); return; }
-      a.hidden = false; a.replaceChildren($(`<audio controls src="data:${etat.audio.mime};base64,${etat.audio.data}"></audio>`), Object.assign($(`<button class="pam-x" type="button" aria-label="Retirer le message vocal">×</button>`), { onclick: () => { etat.audio = null; peindreAudio(); } })); };
+      a.hidden = false; a.replaceChildren($(`<audio controls src="data:${etat.audio.mime};base64,${etat.audio.data}"></audio>`), Object.assign($(`<button class="pam-x" type="button" aria-label="${esc(T("retirer"))}">×</button>`), { onclick: () => { etat.audio = null; peindreAudio(); } })); };
     const arreter = () => { if (etat.rec && etat.rec.state === "recording") etat.rec.stop(); };
     q("#pamRec").onclick = async () => {
       erreur("");
       if (etat.rec && etat.rec.state === "recording") return arreter();
-      if (!navigator.mediaDevices || !window.MediaRecorder) return erreur("L'enregistrement vocal n'est pas possible sur ce téléphone.");
+      if (!navigator.mediaDevices || !window.MediaRecorder) return erreur(T("micKo"));
       try {
         const flux = await navigator.mediaDevices.getUserMedia({ audio: true });
         const mime = ["audio/webm;codecs=opus", "audio/mp4", "audio/webm"].find((m) => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(m)) || "";
         etat.morceaux = []; etat.rec = new MediaRecorder(flux, mime ? { mimeType: mime, audioBitsPerSecond: 24000 } : { audioBitsPerSecond: 24000 });
         etat.rec.ondataavailable = (e) => e.data.size && etat.morceaux.push(e.data);
         etat.rec.onstop = async () => {
-          flux.getTracks().forEach((t) => t.stop()); clearTimeout(etat.fin); const b = q("#pamRec"); b.textContent = "🎙️ Message vocal"; b.classList.remove("pam-rec");
+          flux.getTracks().forEach((t) => t.stop()); clearTimeout(etat.fin); const b = q("#pamRec"); b.textContent = T("voc"); b.classList.remove("pam-rec");
           const blob = new Blob(etat.morceaux, { type: (etat.rec.mimeType || "audio/webm").split(";")[0] });
-          if (blob.size > 700000) return erreur("Message vocal trop long.");
+          if (blob.size > 700000) return erreur(T("long"));
           etat.audio = { type: "audio", mime: blob.type, data: await enB64(blob) }; peindreAudio();
         };
-        etat.rec.start(); const b = q("#pamRec"); b.textContent = "⏹ Arrêter (60 s max)"; b.classList.add("pam-rec");
+        etat.rec.start(); const b = q("#pamRec"); b.textContent = T("stop"); b.classList.add("pam-rec");
         etat.fin = setTimeout(arreter, 60000);
-      } catch (e) { erreur("Micro refusé : autorise le micro pour cette appli, ou écris ton message."); }
+      } catch (e) { erreur(T("micRef")); }
     };
     q("#pamAnnul").onclick = () => { arreter(); f.remove(); };
     q("#pamEnv").onclick = async () => {
       const texte = q("#pamTexte").value.trim();
-      if (!texte && !etat.audio && !etat.captures.length) return erreur("Écris quelques mots, ajoute une capture ou un message vocal.");
-      if (etat.rec && etat.rec.state === "recording") return erreur("Arrête d'abord l'enregistrement.");
-      const b = q("#pamEnv"); b.disabled = true; b.textContent = "Envoi…"; erreur("");
+      if (!texte && !etat.audio && !etat.captures.length) return erreur(T("vide"));
+      if (etat.rec && etat.rec.state === "recording") return erreur(T("arrete"));
+      const b = q("#pamEnv"); b.disabled = true; b.textContent = T("envoi"); erreur("");
       const page = (() => { try { return R.page ? String(R.page()).slice(0, 80) : ""; } catch (e) { return ""; } })();
       const fiche = { app: R.app, uid: u.uid, nom: String(u.nom || "").slice(0, 90), email: String(u.email || "").slice(0, 120), texte: texte.slice(0, 4000), page,
         version: String(R.version || "").slice(0, 30), appareil: appareil().slice(0, 120), captures: etat.captures.length, audio: !!etat.audio, statut: "nouveau", t: Date.now() };
       const pieces = [...etat.captures.map(({ type, mime, data }) => ({ type, mime, data })), ...(etat.audio ? [etat.audio] : [])];
       let id = "";
       try { id = await R.enregistrer(fiche, pieces); }
-      catch (e) { b.disabled = false; b.textContent = "Envoyer"; return erreur("Envoi impossible pour le moment (" + ((e && e.code) || "réseau") + "). Réessaie dans un instant."); }
+      catch (e) { b.disabled = false; b.textContent = T("env"); return erreur(T("envKo", { c: (e && e.code) || "réseau" })); }
       // notification immédiate à D'jims, puis captures et message vocal en pièces jointes ntfy
       if (R.ntfy) {
         const corps = [`${fiche.nom || "Un utilisateur"}${fiche.email ? " (" + fiche.email + ")" : ""}`, texte || "(message vocal)", "",
@@ -187,7 +218,7 @@
           try { await fetch("https://ntfy.sh/" + encodeURIComponent(R.ntfy) + "?" + qs, { method: "PUT", body: deB64(p.data, p.mime) }); } catch (e) {}
         }
       }
-      f.querySelector(".pam-boite").innerHTML = `<h2>✅ Merci !</h2><p class="pam-sous" style="font-size:17px">Ton message est bien arrivé chez D'jims${id ? ` (réf. ${esc(String(id).slice(0, 6))})` : ""}. Il s'en occupe dès que possible.</p><button class="pam-btn" type="button">Fermer</button>`;
+      f.querySelector(".pam-boite").innerHTML = `<h2>${esc(T("merci"))}</h2><p class="pam-sous" style="font-size:17px">${esc(T("recu", { r: id ? " (réf. " + String(id).slice(0, 6) + ")" : "" }))}</p><button class="pam-btn" type="button">${esc(T("fermer"))}</button>`;
       f.querySelector(".pam-btn").onclick = () => f.remove();
     };
   };
