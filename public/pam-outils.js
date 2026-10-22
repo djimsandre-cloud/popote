@@ -86,6 +86,7 @@
       }
     }
     const liste = M.nouveautes.filter((n) => force || vu == null || n.v > vu).slice(0, force ? 3 : 4);
+    if (!liste.length) { ecrire(cle, der); return; }
     const date = (v) => { const d = new Date(String(v).slice(0, 10) + "T12:00:00"); return isNaN(d) ? v : d.toLocaleDateString(lg() === "en" ? "en-GB" : "fr-FR", { day: "numeric", month: "long" }); };
     const f = fenetre(`<h2>${esc(T("qdn", { app: M.app }))}</h2><p class="pam-sous">${esc(T("qdnSous"))}</p>
       ${liste.map((n) => `<p class="pam-ver">${esc(T("majDu", { d: date(n.v) }))}</p><ul>${(Array.isArray(n.points) ? n.points : n.points[lg()] || n.points.fr || []).map((p) => `<li>${p}</li>`).join("")}</ul>`).join("")}
